@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import re,json,urllib,urlparse,base64,unicodedata,os
+import xbmc,re,json,urllib,urlparse,base64,unicodedata,os
 
 from lib import client
 from lib import cache
@@ -15,13 +15,13 @@ class updater:
         
         self.disable_check = kodi.get_setting('dev_resolver')
         if self.disable_check == 'true': return 
-        self.resolverFile = os.path.join(kodi.addonfolder, 'resources/lib/modules/adultresolver.py')
+        self.resolverFile = xbmc.translatePath(os.path.join('special://home/addons/script.module.adultresolver', 'lib/adultresolver/resolver.py'))
         self.check_resolver()
 
     def check_resolver(self):
     
-        try:
-            r = cache.get(client.request, 4, base64.b64decode('aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3hpYmFsYmExMC9YWFhPRFVTLVJlc29sdmVyL21hc3Rlci9hZHVsdHJlc29sdmVyLnB5'))
+        #try:
+            r = cache.get(client.request, 4, base64.b64decode('aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2pzbWl0aDE1NC9zY3JpcHQubW9kdWxlLmFkdWx0cmVzb2x2ZXIvbWFzdGVyL2xpYi9hZHVsdHJlc29sdmVyL3Jlc29sdmVyLnB5'))
             if len(r)>1:
                 with open(self.resolverFile,'r') as f: compfile = f.read()
                 if 'import' in r:
@@ -32,15 +32,14 @@ class updater:
                         with open(self.resolverFile,'w') as f: f.write(r)
                         log_utils.log('Resolver updated!', log_utils.LOGNOTICE)
                         kodi.notify(msg='Resolver Updated.', duration=1250, sound=True)
-        except Exception as e:
-            log_utils.log('Error checking for resolver update %s :: Error: %s' % (url,str(e)), log_utils.LOGERROR)
+        #except Exception as e:
+        #    log_utils.log('Error checking for resolver update :: Error: %s' % str(e), log_utils.LOGERROR)
 
 class streamer:
 
     def resolve(self, url, addon_id, pattern):
 
-        kodi.notify(msg=kodi.get_setting('dev_resolver'))
-        #updater()
+        updater()
         
         if pattern: 
             u = self.generic(url, pattern)
@@ -554,7 +553,7 @@ class streamer:
             return
 
     def youporn(self, url):
-        #try:        
+        try:        
             r = client.request(url)
             pattern = r"""quality[\'\"]\:[\'\"](\d+)[\'\"]\,[\'\"]videoUrl[\'\"]\:[\'\"]([^\'\"]+)"""
             i = re.findall(pattern,r)
@@ -562,8 +561,8 @@ class streamer:
             log_utils.log('%s' % str(r), log_utils.LOGERROR)
             u = sorted(r, key=lambda x: int(re.search('(\d+)', x[0]).group(1)), reverse=True)
             return u
-        #except: 
-        #    return 
+        except: 
+            return 
             
     def youjizz(self, url):
         try:        

@@ -20,7 +20,7 @@ class updater:
 
     def check_resolver(self):
     
-        #try:
+        try:
             r = cache.get(client.request, 4, base64.b64decode('aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2pzbWl0aDE1NC9zY3JpcHQubW9kdWxlLmFkdWx0cmVzb2x2ZXIvbWFzdGVyL2xpYi9hZHVsdHJlc29sdmVyL3Jlc29sdmVyLnB5'))
             if len(r)>1:
                 with open(self.resolverFile,'r') as f: compfile = f.read()
@@ -32,8 +32,8 @@ class updater:
                         with open(self.resolverFile,'w') as f: f.write(r)
                         log_utils.log('Resolver updated!', log_utils.LOGNOTICE)
                         kodi.notify(msg='Resolver Updated.', duration=1250, sound=True)
-        #except Exception as e:
-        #    log_utils.log('Error checking for resolver update :: Error: %s' % str(e), log_utils.LOGERROR)
+        except Exception as e:
+            log_utils.log('Error checking for resolver update :: Error: %s' % str(e), log_utils.LOGERROR)
 
 class streamer:
 

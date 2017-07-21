@@ -14,7 +14,7 @@ class updater:
     def __init__(self):
         
         self.disable_check = kodi.get_setting('dev_resolver')
-        if self.disable_check == 'true': return 
+        if self.disable_check == 'true': return
         self.resolverFile = xbmc.translatePath(os.path.join('special://home/addons/script.module.adultresolver', 'lib/adultresolver/resolver.py'))
         self.check_resolver()
 
